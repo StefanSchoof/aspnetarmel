@@ -2,6 +2,7 @@ noBuild=("3.8.0/" "3.10.0/")
 
 rm -rf mono-docker
 git clone https://github.com/mono/docker.git mono-docker
+docker pull armel/debian:wheezy
 cd mono-docker
 sed -i "s/FROM debian/FROM armel\/debian/" */Dockerfile
 sed -i "/.*deb http:\/\/download.mono-project.com\/repo\/debian [0-9]\+-security main.*/d" */Dockerfile
