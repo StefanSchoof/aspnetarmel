@@ -1,17 +1,21 @@
 noBuild=("3.8.0/" "3.10.0/")
+GitFolder="mono-docker"
+GitUrl="https://github.com/mono/docker.git"
+FolderGlob="*/"
+ImageName="aspnetarmel/armel-mono"
 
-rm -rf mono-docker
-git clone https://github.com/mono/docker.git mono-docker
+rm -rf $GitFolder
+git clone $GitUrl $GitFolder
 docker pull armel/debian:wheezy
-cd mono-docker
-sed -i "s/FROM debian/FROM armel\/debian/" */Dockerfile
-sed -i "/.*deb http:\/\/download.mono-project.com\/repo\/debian [0-9]\+-security main.*/d" */Dockerfile
-sed -i "s/MAINTAINER .*/MAINTAINER <https:\/\/github.com\/StefanSchoof\/aspnetarmel>/" */Dockerfile
-for version in $(ls -1d */)
+cd $GitFolder
+sed -i "s/FROM debian/FROM armel\/debian/" ${FolderGlob}Dockerfile
+sed -i "/.*deb http:\/\/download.mono-project.com\/repo\/debian [0-9]\+-security main.*/d" ${FolderGlob}Dockerfile
+sed -i "s/MAINTAINER .*/MAINTAINER <https:\/\/github.com\/StefanSchoof\/aspnetarmel>/" ${FolderGlob}Dockerfile
+for version in $(ls -1d $FolderGlob)
 do
 	if [[ ! " ${noBuild[@]} " =~ " ${version} " ]]; then
-		docker build -t aspnetarmel/armel-mono:${version%/} $version
-		docker push aspnetarmel/armel-mono:${version%/}
+		docker build -t ${ImageName}:${version%/} $version
+		docker push ${ImageName}:${version%/}
 	fi
 done
 
