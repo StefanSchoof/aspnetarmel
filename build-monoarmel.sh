@@ -1,3 +1,4 @@
+#!/bin/bash
 noBuild=("3.8.0/" "3.10.0/")
 GitFolder="mono-docker"
 GitUrl="https://github.com/mono/docker.git"
