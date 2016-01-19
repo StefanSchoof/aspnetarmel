@@ -19,6 +19,8 @@ for version in $(ls -1d $FolderGlob)
 do
 	if [[ ! " ${noBuild[@]} " =~ " ${version} " ]]; then
 		docker build -t ${ImageName}:${version%/} $version
+		docker run ${ImageName}:${version%/} /bin/bash -c "apt-get -q update && apt-get -s upgrade" | grep "^0 upgraded" || \
+			docker build --no-cache -t ${ImageName}:${version%/} $version
 		docker push ${ImageName}:${version%/}
 	fi
 done
